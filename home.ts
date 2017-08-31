@@ -4,9 +4,13 @@ import {NavController, Segment} from 'ionic-angular';
 import {Http, Headers, RequestOptions} from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
-import { xml2js } from 'xml2js';
+
+import * as X2JS from 'xml2js';
+
+//import * as X2JS from 'x2js';
 
 declare var PagSeguroDirectPayment;
+//declare const X2JS: any;
 
 @Component({
   templateUrl: 'home.html',
@@ -25,25 +29,109 @@ export class HomePage implements OnInit {
     token: ''
   };
 
+
   public xmlItems:any;
 
 
   constructor(private nav:NavController,
               private ref:ChangeDetectorRef,
               private http: Http) {
-
   }
 
   //ESSA É A BAGACEIRA VÉIA QUE NÃO TÁ FUNCIONANDO... O RESTO TA TUDO OK!
 
   getStatus(){
-    this.http.get("https://ws.sandbox.pagseguro.uol.com.br/v2/transactions/738CB4B3-655A-49C6-B729-984E97B763DC?email=everson.magioni@gmail.com&token=EBFD37ADAB3D492396BE5B548E880686")
-    .map(res=> console.log(res))
+    //this.http.get("https://ws.sandbox.pagseguro.uol.com.br/v2/transactions/738CB4B3-655A-49C6-B729-984E97B763DC?email=everson.magioni@gmail.com&token=EBFD37ADAB3D492396BE5B548E880686")
+    //.map(res=>console.log(res))
+
+    //this.http.get("https://ws.sandbox.pagseguro.uol.com.br/v2/transactions/738CB4B3-655A-49C6-B729-984E97B763DC?email=everson.magioni@gmail.com&token=EBFD37ADAB3D492396BE5B548E880686")
+
+    //.map(res=> this.teste(res))
+    /*.map(res=> console.log(res))
     .subscribe(
       data => console.log(data),
       error=> console.log(error),
-      ()=> console.log("completo"));
+      ()=> console.log("completo"));*/
+
+
+
+
+
+
+    /*let xml, erro;
+    let dadosPagamento = this.http.get("https://ws.sandbox.pagseguro.uol.com.br/v2/transactions/738CB4B3-655A-49C6-B729-984E97B763DC?email=everson.magioni@gmail.com&token=EBFD37ADAB3D492396BE5B548E880686");
+
+    X2JS.parseString(dadosPagamento, (err, result)=>{
+      xml = result;
+      erro = err;
+    });
+
+    if(xml.transaction){
+      console.log("MAOI");
+    }*/
+
+    this.http.get("https://ws.sandbox.pagseguro.uol.com.br/v2/transactions/738CB4B3-655A-49C6-B729-984E97B763DC?email=everson.magioni@gmail.com&token=EBFD37ADAB3D492396BE5B548E880686")
+    .map(res=>res.text())
+    .subscribe(data=>{
+      X2JS.parseString(data, (err, result)=>{
+        this.convert(data);
+      });
+    })
+    /*.map(res=> {
+      console.log(res);
+      let xml, erro;
+
+      X2JS.parseString(res, (err, result)=>{
+        xml = result;
+        erro = err;
+
+        console.log("Resultado do XML " + xml);
+      })
+    })
+    //.map(res=> this.convert(res))
+    .subscribe(
+      data => console.log(data),
+      error=> console.log(error),
+      ()=> console.log("completo"));*/
   }
+
+  convert(dadosPagamento){
+    console.log("Dados Pagamento: " + dadosPagamento);
+
+    let xml, erro;
+                X2JS.parseString(dadosPagamento, (err, result) => {
+                    xml = result; //.transaction.code[0] ? result.transaction.code[0] : undefined;
+                    erro = err;
+                    console.log("Resultado do XML" + xml);
+                });
+
+                if(xml.transaction){
+                  console.log("Status da transação " + xml.transaction.status);
+                }
+                //if (xml.transaction) {
+
+                    /*this.statusPagamento = {
+                        'userId': this.usuario.id,
+                        'codePayment': xml.transaction.code[0],
+                        'planeId': this.plano.id,
+                        'planeTime': this.plano.periodo,
+                        'statusPayment': 1,
+                        'credit': this.plano.id > this.meuPlano ? parseFloat(this.plano.value) : (this.creditoSomar + this.plano.value),
+                        'valuePayment': parseFloat(this.plano.valueFinal),
+                    }*/
+    //}
+  }
+
+  teste(data){
+    //let xml = "<code>TESTE</code>";
+    let xml = data;
+    let parser:any = new X2JS();
+    let json = parser.xml2js(xml);
+
+    console.log("Resultado " + JSON.stringify(json));
+  }
+
+
 
   //FIM DA BAGACEIRA
 
@@ -81,7 +169,7 @@ export class HomePage implements OnInit {
     PagSeguroDirectPayment.setSessionId('55a343c569c64619ac9da8bcce4800de');
   }
 
-  parseXML(data){
+  /*parseXML(data){
     return new Promise(resolve =>
       {
          var k,
@@ -99,16 +187,13 @@ export class HomePage implements OnInit {
             {
                var item = obj.publication[k];
                console.log("Item " + item);
-               /*arr.push({
-                  id           : item.code[0],
-                  status           : item.status[0]
-               });*/
+
             }
 
             resolve(arr);
          });
       });
-  }
+  }*/
 
   segmentChanged(event){
     //this.paymentMethod = event.target.value;

@@ -1,0 +1,135 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Ionic Blank
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="checkout">
+  <div padding>
+    <ion-segment [(ngModel)]="paymentMethod" (ionChange)="segmentChanged($event)">
+      <ion-segment-button *ngFor="let o of paymentMethods" value="{{ o.name }}" class="ion-segment-button-pgto">
+        {{o.name}}
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+<button ion-button (click)="setaId()">SETA ID</button>
+
+<button ion-button (click)="getPayments()">GET PAYMENTS</button>
+
+<button ion-button (click)="getStatus()">GET STATUS</button>
+
+   <ion-item-group>
+      <ion-item-divider color="light">XML</ion-item-divider>
+      <ion-item *ngFor="let item of xmlItems">
+         {{ item.status }}
+      </ion-item>
+   </ion-item-group>
+
+
+{{paymentMethod}}
+
+  <div [ngSwitch]="paymentMethod">
+    <div *ngSwitchCase="'BOLETO'">
+      <ion-card>
+        <ion-card-header>
+          Total a pagar: <strong>100</strong>
+        </ion-card-header>
+
+        <ion-card-content>
+          <button ion-button>Gerar boleto</button>
+        </ion-card-content>
+
+      </ion-card>
+    </div>
+
+    <ion-list *ngSwitchCase="'CREDIT_CARD'">
+      <ion-item>
+        <ion-label>Numero do cartao</ion-label>
+        <ion-input type="text" value="" [(ngModel)]="creditCard.num"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Código de segurança</ion-label>
+        <ion-input type="text" [(ngModel)]="creditCard.cvv"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Mês - Expiração</ion-label>
+        <ion-input type="text" [(ngModel)]="creditCard.monthExp"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Ano - Expiração</ion-label>
+        <ion-input type="text" [(ngModel)]="creditCard.yearExp"></ion-input>
+      </ion-item>
+    </ion-list>
+    <button ion-button (click)="paymentCreditCard()">Pagar</button>
+  </div>
+
+  <!--<ion-list>
+    <ion-item *ngFor="let o of cart.items">
+      {{o.name}} - R$ {{o.price}}
+    </ion-item>
+  </ion-list>-->
+</ion-content>
+<!--<ion-content padding>
+  The world is your oyster.
+  <p>
+    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
+  </p>
+
+  <button ion-button (click)="getId()">PEGAR ID</button>
+
+  <button ion-button (click)="setaId()">SETA ID</button>
+
+  <button ion-button (click)="getPayments()">GET PAYMENTS</button>
+
+
+
+  <div>
+    Tipos de pagamentos {{paymentMethod}}
+    <ion-segment [(ngModel)]="paymentMethod" (ionChange)="segmentChanged($event)">
+      <ion-segment-button *ngFor="let o of paymentMethods" value="{{ o.name }}">
+        {{o.name}}
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <div [ngSwitch]="paymentMethod">
+    <div *ngSwitchCase="'BOLETO'">
+      <ion-card>
+        <ion-card-header>
+          Total a pagar: <strong>{{100}}</strong>
+        </ion-card-header>
+
+        <ion-card-content>
+          <button ion-button>Gerar boleto</button>
+        </ion-card-content>
+
+      </ion-card>
+    </div>
+
+    <ion-list *ngSwitchCase="'CREDIT_CARD'">
+      <ion-item>
+        <ion-label>Numero do cartao</ion-label>
+        <ion-input type="text" value="" [(ngModel)]="creditCard.num"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Código de segurança</ion-label>
+        <ion-input type="text" [(ngModel)]="creditCard.cvv"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Mês - Expiração</ion-label>
+        <ion-input type="text" [(ngModel)]="creditCard.monthExp"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Ano - Expiração</ion-label>
+        <ion-input type="text" [(ngModel)]="creditCard.yearExp"></ion-input>
+      </ion-item>
+    </ion-list>
+    <button ion-button (click)="paymentCreditCard()">Pagar</button>
+  </div>
+
+</ion-content>-->
